@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/DusanKasan/parsemail"
@@ -97,7 +98,17 @@ func formatHTMLEmail(email parsemail.Email) string {
 }
 
 func formatTextEmail(email parsemail.Email) string {
-	return email.TextBody
+	// Cleanup multiple newlines
+	blockRe := regexp.MustCompile(`(?:\r?\n)+`)
+	newlineRe := regexp.MustCompile(`\r?\n`)
+	cleaned := blockRe.ReplaceAllStringFunc(email.TextBody, func(s string) string {
+		count := len(newlineRe.FindAllString(s, -1))
+		if count >= 3 {
+			return "\n\n"
+		}
+		return "\n"
+	})
+	return strings.ReplaceAll(cleaned, "\\n\\n", "\\n")
 }
 
 func format(email parsemail.Email, text string) string {
