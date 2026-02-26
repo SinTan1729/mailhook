@@ -97,7 +97,7 @@ func formatHTMLEmail(email parsemail.Email, hook Hook) string {
 }
 
 func formatTextEmail(email parsemail.Email, hook Hook) string {
-	return format(email, email.TextBody)
+	return email.TextBody
 }
 
 func format(email parsemail.Email, text string) string {

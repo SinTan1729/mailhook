@@ -2,7 +2,6 @@ package mail
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -28,18 +27,8 @@ func NewHook(emailAddress, name, hookURL string) *Hook {
 }
 
 func (h Hook) Send(from, text string) error {
-	data := hookData{
-		Username: h.Name,
-		Content:  fmt.Sprintf("**%s**:\n%s", from, text),
-	}
-
-	payload, err := json.Marshal(data)
-	if err != nil {
-		return err
-	}
-
 	// Send the webhook request
-	resp, err := http.Post(h.URL, "application/json", bytes.NewBuffer(payload))
+	resp, err := http.Post(h.URL, "application/text", bytes.NewBufferString(text))
 	if err != nil {
 		return err
 	}

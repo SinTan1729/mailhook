@@ -1,6 +1,6 @@
-*mailhook* is a simple email to webhook server.
+_mailhook_ is a simple email to webhook server.
 
-Only tested with Discord.
+Only works for NTFY.
 
 ## Usage
 
@@ -11,6 +11,7 @@ mailhook
 ```
 
 You can specify a `mailhook.yaml` in the command line.
+
 ```bash
 mailhook -c mailhook.yaml
 ```
