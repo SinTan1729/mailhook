@@ -79,35 +79,38 @@ func (s *Session) Logout() error {
 
 func formatEmail(email parsemail.Email, hook Hook) string {
 	if hook.HTMLMarkdown && email.HTMLBody != "" {
-		return formatHTMLEmail(email)
+		return formatHTMLEmail(email, hook)
 	}
-	return formatTextEmail(email)
+	return formatTextEmail(email, hook)
 }
 
-func formatHTMLEmail(email parsemail.Email) string {
+func formatHTMLEmail(email parsemail.Email, hook Hook) string {
 	converter := md.NewConverter("", true, nil)
 
 	markdown, err := converter.ConvertString(email.HTMLBody)
 	if err != nil {
 		log.Printf("error in markdown conversion: %v. Processing text body instead.", err)
 		log.Println("Processing text body instead.")
-		return formatTextEmail(email)
+		return formatTextEmail(email, hook)
 	}
 
 	return format(email, markdown)
 }
 
-func formatTextEmail(email parsemail.Email) string {
+func formatTextEmail(email parsemail.Email, hook Hook) string {
+	// Remove if first line is the name
+	text := strings.Replace(email.TextBody, hook.Name, "", 1)
 	// Cleanup multiple newlines
 	blockRe := regexp.MustCompile(`(?:\r?\n)+`)
 	newlineRe := regexp.MustCompile(`\r?\n`)
-	cleaned := blockRe.ReplaceAllStringFunc(email.TextBody, func(s string) string {
+	cleaned := blockRe.ReplaceAllStringFunc(text, func(s string) string {
 		count := len(newlineRe.FindAllString(s, -1))
 		if count >= 3 {
 			return "\n\n"
 		}
 		return "\n"
 	})
+
 	return strings.ReplaceAll(cleaned, "\\n\\n", "\\n")
 }
 

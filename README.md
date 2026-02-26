@@ -1,6 +1,6 @@
 _mailhook_ is a simple email to webhook server.
 
-Only works for NTFY.
+Only works for NTFY. It's modified to work well with Pocket ID.
 
 ## Usage
 
