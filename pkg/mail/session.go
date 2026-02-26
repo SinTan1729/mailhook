@@ -78,25 +78,25 @@ func (s *Session) Logout() error {
 
 func formatEmail(email parsemail.Email, hook Hook) string {
 	if hook.HTMLMarkdown && email.HTMLBody != "" {
-		return formatHTMLEmail(email, hook)
+		return formatHTMLEmail(email)
 	}
-	return formatTextEmail(email, hook)
+	return formatTextEmail(email)
 }
 
-func formatHTMLEmail(email parsemail.Email, hook Hook) string {
+func formatHTMLEmail(email parsemail.Email) string {
 	converter := md.NewConverter("", true, nil)
 
 	markdown, err := converter.ConvertString(email.HTMLBody)
 	if err != nil {
 		log.Printf("error in markdown conversion: %v. Processing text body instead.", err)
 		log.Println("Processing text body instead.")
-		return formatTextEmail(email, hook)
+		return formatTextEmail(email)
 	}
 
 	return format(email, markdown)
 }
 
-func formatTextEmail(email parsemail.Email, hook Hook) string {
+func formatTextEmail(email parsemail.Email) string {
 	return email.TextBody
 }
 
@@ -113,7 +113,7 @@ func formatFrom(addresses []*nm.Address) string {
 		if sb.Len() > 0 {
 			sb.WriteString(", ")
 		}
-		sb.WriteString(fmt.Sprintf("%s <%s>", a.Name, a.Address))
+		fmt.Fprintf(&sb, "%s <%s>", a.Name, a.Address)
 	}
 	return sb.String()
 }

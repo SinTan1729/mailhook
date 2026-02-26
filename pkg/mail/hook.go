@@ -6,11 +6,6 @@ import (
 	"net/http"
 )
 
-type hookData struct {
-	Username string `json:"username"`
-	Content  string `json:"content"`
-}
-
 type Hook struct {
 	Address      string `yaml:"address"`
 	Name         string `yaml:"name"`
