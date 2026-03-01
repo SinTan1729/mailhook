@@ -41,6 +41,10 @@ hooks:
 
 If you need to use html emails, set `html_markdown: true`. Otherwise it will use the text portion of the email.
 
+## Usage
+
+You can get it using the Docker image `ghcr.io/sintan1729/mailhook:latest`.
+
 ## Building
 
 You need to have `go` installed. If you don't have it, go to https://golang.org/doc/install
